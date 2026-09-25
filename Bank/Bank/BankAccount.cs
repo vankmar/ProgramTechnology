@@ -52,7 +52,7 @@ internal class BankAccount
         foreach (var item in _allTransations)
         {
             balance += item.Amount;
-            report.AppendLine($"{item.Date.ToShortDateString}\t\t{item.Amount}\t{balance}\t{item.Note}");
+            report.AppendLine($"{item.Date.ToShortDateString()}\t\t{item.Amount}\t{balance}\t{item.Note}");
         }
         return report.ToString();
     }
