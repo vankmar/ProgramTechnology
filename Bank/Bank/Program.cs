@@ -32,7 +32,7 @@
             interest.PerformMonthEndTransaction();
             Console.WriteLine(interest.GetAccountHistory());
 
-            Console.WriteLine();
+            Console.WriteLine(); 
 
             LineOfCreditAccount lineOfCreditAccount = new LineOfCreditAccount("Yana", 10); // potom nazad 0
 
