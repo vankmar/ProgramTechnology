@@ -2,7 +2,7 @@
 
 namespace Bank;
 
-internal class BankAccount
+public class BankAccount
 {
     private List<Transaction> _allTransations = new List<Transaction>();
     public string Owner { get; private set; }
@@ -56,5 +56,7 @@ internal class BankAccount
         }
         return report.ToString();
     }
+
+    public virtual void PerformMonthEndTransaction() { } // ключ слово виртуал позволяет в доч классе предоставить другую реализацию этого метода
 }
 
