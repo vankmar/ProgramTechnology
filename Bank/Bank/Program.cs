@@ -28,21 +28,30 @@
                 Console.WriteLine(e.Message);
             }
 
-            InterestEarningAccount interest = new InterestEarningAccount("Yana", 1000);
-            interest.PerformMonthEndTransaction();
+            InterestEarningAccount interest = new InterestEarningAccount("Yana", 1000m);
             Console.WriteLine(interest.GetAccountHistory());
 
             Console.WriteLine(); 
 
-            LineOfCreditAccount lineOfCreditAccount = new LineOfCreditAccount("Yana", 10); // potom nazad 0
+            LineOfCreditAccount lineOfCreditAccount = new LineOfCreditAccount("Yana", 0m, 1000m);
+            lineOfCreditAccount.MakeWithdrawal(500m, DateTime.UtcNow, "credit");
+
+
+            GiftCardAccount giftCard = new GiftCardAccount("Yana", 1000m, 5000m);
+
+            lineOfCreditAccount.MakeWithdrawal(10000m, DateTime.UtcNow, "credit");
+
+
 
             List<BankAccount> accounts = new List<BankAccount>(); // об. баз. класса
             accounts.Add(account1);
+            accounts.Add(giftCard);
             accounts.Add(interest); // объекты дочерних
-            // accounts.Add(lineOfCreditAccount); // классов
+            accounts.Add(lineOfCreditAccount); // классов
 
             foreach (BankAccount account in accounts)
             {
+                Console.WriteLine(account);
                 account.PerformMonthEndTransaction(); // такой вызыватся в зависимости из какого класса акк
                 Console.WriteLine(account.GetAccountHistory());
             }

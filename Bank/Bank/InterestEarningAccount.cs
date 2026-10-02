@@ -15,7 +15,5 @@ public class InterestEarningAccount : BankAccount
             decimal interest = Balance * 0.02m;
             MakeDeposit(interest, DateTime.UtcNow, "Apply month interest");
         }
-
     }
-
 }
