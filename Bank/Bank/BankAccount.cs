@@ -9,7 +9,7 @@ public class BankAccount
     private List<Transaction> _allTransations = new List<Transaction>();
     public string Owner { get; private set; }
     public string Number { get; }
-    public decimal Balance //decimal - очень точно, для фин оп
+    public decimal Balance //decimal - очень точно, для фин оп 
     { 
         get                
         {                  
