@@ -1,6 +1,12 @@
 ﻿namespace ConsoleApp1;
 
-internal class ShapeKind
+/// <summary>
+/// Возможные фигуры
+/// </summary>
+public enum ShapeKind
 {
-
+    Circle,
+    Rectangle,
+    Triangle
 }
+
