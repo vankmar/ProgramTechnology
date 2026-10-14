@@ -28,7 +28,13 @@ public class GiftCardAccount : BankAccount
     public override void PerformMonthEndTransaction()
     {
         if (_monthlyDeposit != 0)
-            MakeDeposit(_monthlyDeposit, DateTime.UtcNow, "Add monthly interest");
+        {
+            Transaction? interest = new(_monthlyDeposit, DateTime.UtcNow, "Apply bonus");
+
+            _allTransations.Add(interest);
+            _interestLogs.Log(Number, "Interest", _monthlyDeposit);
+        }
+            //MakeDeposit(_monthlyDeposit, DateTime.UtcNow, "Add monthly interest");
     }
 
     /// <summary>

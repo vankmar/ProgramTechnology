@@ -10,7 +10,22 @@ namespace Bank;
 public class BankAccount
 {
     private readonly decimal _minimumBalance; // костыль
-    private List<Transaction> _allTransations = new List<Transaction>();
+    /// <summary>
+    /// все транзации счёта
+    /// </summary>
+    protected List<Transaction> _allTransations = new List<Transaction>();
+    /// <summary>
+    /// все операции пополнения счёта
+    /// </summary>
+    protected AuditLog _depositLogs = new AuditLog();
+    /// <summary>
+    /// все операции снятия с счёта
+    /// </summary>
+    protected AuditLog _withdrawalLogs = new AuditLog();
+    /// <summary>
+    /// все операции начисления/списания процентов для счёта
+    /// </summary>
+    protected AuditLog _interestLogs = new AuditLog();
 
     /// <summary>
     /// Владелец банковского счёта, можно менять но только внутри класса
@@ -34,7 +49,30 @@ public class BankAccount
                 balance += transaction.Amount;
             return balance;
         }                  
-    } 
+    }
+    /// <summary>
+    /// поле - статус аккаунта.
+    /// </summary>
+    public AccountStatus Status { get; set; } = AccountStatus.Regular; // по ум.
+
+    /// <summary>
+    /// значения, которые может принимать статус аккаунта (Regular, Premium, VIP)
+    /// </summary>
+    public enum AccountStatus
+    {
+        /// <summary>
+        /// обычный вид счёта, по умолчанию, 1
+        /// </summary>
+        Regular,
+        /// <summary>
+        /// вид счёта премиум, 2
+        /// </summary>
+        Premium,
+        /// <summary>
+        /// самый лучший вид счёта, 3
+        /// </summary>
+        VIP
+    }
 
     private static int s_accountNumberSeed = 1000000000; // стаtик - это поле прин всем методам класса ( и 1 и 2 им доступ)
 
@@ -80,6 +118,9 @@ public class BankAccount
         if (amount <= 0) throw new ArgumentOutOfRangeException (nameof(amount), "Amount of deposit must be positive");
         var deposit = new Transaction(amount, date, note);
         _allTransations.Add(deposit);
+
+        string type = "Deposit";
+        _depositLogs.Log(Number, type, amount);
     }
 
     /// <summary>
@@ -94,11 +135,16 @@ public class BankAccount
 
         Transaction? overdraftTransaction = CheckWithdrawalLimit(Balance - amount < _minimumBalance);
         Transaction? withdrawal = new(-amount, date, note);
-
+        
         _allTransations.Add(withdrawal);
+        string type = "Withdrawal";
+        _withdrawalLogs.Log(Number, type, amount);
 
         if (overdraftTransaction is not null)
+        {
             _allTransations.Add(overdraftTransaction);
+            _withdrawalLogs.Log(Number,type, 20);
+        }
 
         //if (amount <= 0) throw new ArgumentOutOfRangeException(nameof(amount), "Amount of withdrawal must be positive");
         //if (Balance - amount < _minimumBalance) throw new InvalidOperationException("Insufficient balance for this withdrawal");
@@ -138,9 +184,60 @@ public class BankAccount
     }
 
     /// <summary>
-    /// пустой виртуальный метод Совершить транзакцию в конце месяца
+    /// виртуальный метод Совершить транзакцию в конце месяца, 
+    /// теперь кроме проведения транзакций ещё их и логирует и добавляет в журнал, вычисляет сумму для транзакции
     /// </summary>
-    public virtual void PerformMonthEndTransaction() { } // ключ слово виртуал позволяет в доч классе предоставить другую реализацию этого метода
+    public virtual void PerformMonthEndTransaction()  // ключ слово виртуал позволяет в доч классе предоставить другую реализацию этого метода
+    {
+        switch (Status)
+        {
+            case AccountStatus.Regular:
+                decimal amount1 = Balance - 50m;
+                MakeWithdrawal(amount1, DateTime.UtcNow, "Apply commission");
+                break;
+
+            case AccountStatus.Premium:
+                if (Balance > 10000)
+                {
+                    decimal amount2 = (Balance - 10000) * 0.01m;
+                    Transaction? interest2 = new(amount2, DateTime.UtcNow, "Apply bonus");
+
+                    _allTransations.Add(interest2);
+                    _interestLogs.Log(Number, "Interest", amount2);
+
+                    //MakeDeposit(interest2, DateTime.UtcNow, "Apply bonus"); // задача 1
+                }
+                break;
+
+            case AccountStatus.VIP:
+                if (Balance > 10000)
+                {
+                    decimal amount3 = (Balance - 10000) * 0.03m;
+
+                    Transaction? interest3 = new(amount3, DateTime.UtcNow, "Apply bonus");
+
+                    _allTransations.Add(interest3);
+                    _interestLogs.Log(Number, "Interest", amount3);
+                    //MakeDeposit(interest3, DateTime.UtcNow, "Apply bonus");
+                }
+
+                decimal cashback = 0;
+                foreach (var trans in _allTransations)
+                {
+                    if (trans.Amount < 0)
+                        cashback += trans.Amount;
+                }
+                cashback = Math.Abs(cashback);
+                cashback = cashback * 0.05m;
+                //MakeDeposit(cashback, DateTime.UtcNow, "Apply cashback");
+
+                Transaction? interest = new(cashback, DateTime.UtcNow, "Apply bonus");
+
+                _allTransations.Add(interest);
+                _interestLogs.Log(Number, "Interest", cashback);
+                break;
+        }
+    }
 
     /// <summary>
     ///  переопределённый метод Перевода В Строку для класса банковского аккаунта
@@ -150,5 +247,37 @@ public class BankAccount
     {
         return $"Owner: {Owner}\taccount number: {Number}\t type of account: {GetType()}";
     }
+
+    /// <summary>
+    /// меняет статус банковского аккаунта
+    /// </summary>
+    /// <param name="status"> статус банковского аккаунта </param>
+    public void ChangeAccountStatus(AccountStatus status)
+    {
+        Status = status;
+    }
+
+    /// <summary>
+    /// вывод журналов для опреаций пополнения счёта
+    /// </summary>
+    public void ShowDepositLogs()
+    {
+        _depositLogs.ShowLogs();
+    }
+    /// <summary>
+    /// вывод журналов для опреаций снятия с счёта
+    /// </summary>
+    public void ShowWithdrawalLogs()
+    {
+        _withdrawalLogs.ShowLogs();
+    }
+    /// <summary>
+    /// вывод журналов для процентов
+    /// </summary>
+    public void ShowInterestLogs()
+    {
+        _interestLogs.ShowLogs();
+    }
+
 }
 

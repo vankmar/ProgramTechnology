@@ -1,6 +1,5 @@
 ﻿namespace Bank
 {
-
     internal class Program
     {
         static void Main(string[] args)
@@ -31,7 +30,7 @@
             InterestEarningAccount interest = new InterestEarningAccount("Yana", 1000m);
             Console.WriteLine(interest.GetAccountHistory());
 
-            Console.WriteLine(); 
+            Console.WriteLine();
 
             LineOfCreditAccount lineOfCreditAccount = new LineOfCreditAccount("Yana", 0m, 1000m);
             lineOfCreditAccount.MakeWithdrawal(500m, DateTime.UtcNow, "credit");
@@ -57,6 +56,60 @@
             }
 
 
+            // тест задачи 1
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Тест 1");
+
+
+            account1.ChangeAccountStatus(BankAccount.AccountStatus.Premium);
+            account1.PerformMonthEndTransaction();
+            Console.WriteLine(account1.GetAccountHistory()); // один раз выведется комиссия тк раньше был регюлар и исп-ся PerformMonthEndTransaction на нём  
+
+            account2.ChangeAccountStatus(BankAccount.AccountStatus.VIP);
+            account2.MakeDeposit(1000000000, DateTime.UtcNow, "");
+
+            account2.MakeWithdrawal(10000000, DateTime.UtcNow, ":(");
+            account2.MakeWithdrawal(10000, DateTime.UtcNow, ":(");
+            account2.PerformMonthEndTransaction();
+            Console.WriteLine(account2.GetAccountHistory());
+
+            // тест задачи 2
+            Console.WriteLine("Тест 2");
+
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+
+
+            account2.ShowDepositLogs();
+            Console.WriteLine();
+            account2.ShowWithdrawalLogs();
+            Console.WriteLine();
+            account2.ShowInterestLogs();
+
+            // тест задачи 3
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine();
+            Console.WriteLine("Тест 3");
+            account1.MakeDeposit(10000, DateTime.UtcNow, "");
+            var transfer = new TransferService();
+            try
+            {
+                transfer.Transfer(account1, account2, 200m);
+                Console.WriteLine("Перевод выполнен успешно.");
+            }
+            catch (InvalidOperationException e)
+            {
+                Console.WriteLine($"Ошибка перевода: {e.Message}");
+            }
+
+            Console.WriteLine(account1.GetAccountHistory());
+            Console.WriteLine();
+            Console.WriteLine(account2.GetAccountHistory());
         }
     }
 }

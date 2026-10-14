@@ -26,7 +26,12 @@ public class InterestEarningAccount : BankAccount
         if (Balance > 500m) // 500m - 500 децимал
         {
             decimal interest = Balance * 0.02m;
-            MakeDeposit(interest, DateTime.UtcNow, "Apply month interest");
+
+            Transaction? interestTr = new(interest, DateTime.UtcNow, "Apply month interest");
+
+            _allTransations.Add(interestTr);
+            _interestLogs.Log(Number, "Interest", interest);
+            // MakeDeposit(interest, DateTime.UtcNow, "Apply month interest");
         }
     }
 }

@@ -15,4 +15,3 @@ public record Transaction(decimal Amount, DateTime Date, string Note); // тк �
 //    // и т.д. - в (decimal Amount, DateTime Date, string Note)
 //}
 
-//trr dgsgdfgdf
