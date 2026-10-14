@@ -1,7 +1,7 @@
 ﻿namespace ConsoleApp1;
 
 /// <summary>
-/// базовый класс геом. фигур
+/// базовый класс геом. фигур 
 /// </summary>
 public abstract class Shape
 {
