@@ -44,6 +44,7 @@ public class Circle : Shape, IScalable
         if (factor <= 0)
             throw new ArgumentOutOfRangeException(nameof(factor), "The scaling factor must be positive.");
         Radius *= factor;
+        _scaleCount++;
     }
 
     /// <summary>
@@ -53,5 +54,12 @@ public class Circle : Shape, IScalable
     public override string ToString()
     {
         return $"[Circle] {Color}, kind: {Kind}, r={Radius}";
+    }
+
+    private int _scaleCount;
+    
+    public int GetScaleCount()
+    {
+        return _scaleCount;
     }
 }

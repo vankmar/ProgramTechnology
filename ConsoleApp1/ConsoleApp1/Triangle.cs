@@ -37,6 +37,7 @@ public class Triangle : Shape
     /// <returns> площадь треугольника </returns>
     public override double GetArea()
     {
+        _areaGetCount++;
         return Base * Height / 2;
     }
 
@@ -47,5 +48,12 @@ public class Triangle : Shape
     public override string ToString()
     {
         return $"[Triangle] {Color}, kind: {Kind}, base={Base}, height={Height}";
+    }
+
+    private int _areaGetCount;
+
+    public int GetAreaGetCount()
+    {
+        return _areaGetCount;
     }
 }

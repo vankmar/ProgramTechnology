@@ -37,6 +37,7 @@ public class Rectangle : Shape
     /// <returns> площадь прямоугольника </returns>
     public override double GetArea()
     {
+        _areaGetCount++;
         return Width * Height;
     }
 
@@ -47,5 +48,11 @@ public class Rectangle : Shape
     public override string ToString()
     {
         return $"[Rectangle] {Color}, kind: {Kind}, {Width}x{Height}";
+    }
+
+    private int _areaGetCount;
+    public int GetAreaGetCount()
+    {
+        return _areaGetCount;
     }
 }
