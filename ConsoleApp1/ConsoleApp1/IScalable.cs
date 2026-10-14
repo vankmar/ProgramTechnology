@@ -1,6 +1,10 @@
 ﻿namespace ConsoleApp1;
 
-internal interface IScalable
+public interface IScalable
 {
-
+    /// <summary>
+    /// масштабирует фигуру по фактору
+    /// </summary>
+    /// <param name="factor"> фактор </param>
+    void Scale(double factor);
 }

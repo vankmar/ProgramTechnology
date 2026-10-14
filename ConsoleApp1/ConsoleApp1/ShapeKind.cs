@@ -1,7 +1,7 @@
 ﻿namespace ConsoleApp1;
 
 /// <summary>
-/// Возможные фигуры
+/// Перечисление возможных фигуры
 /// </summary>
 public enum ShapeKind
 {
