@@ -4,6 +4,6 @@
 public interface IAccountOperations
 {
     decimal Balance { get; }
-    void Deposit(decimal amount3, DateTime data, string note);
-    void Withdraw(decimal amount3, DateTime data, string note);
+    void Deposit(decimal amount, DateTime date, string note);
+    void Withdraw(decimal amount, DateTime date, string note);
 }
