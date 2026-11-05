@@ -1,0 +1,8 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="NumberGame.Core/NumberGameSOLID.csproj" Id="eb616b85-95d4-4b15-beb5-e27b24ed61f1" />
+    <Project Path="NumberGuessSOLID/NumberGuessOld.csproj">
+      <BuildDependency Project="NumberGame.Core/NumberGameSOLID.csproj" />
+    </Project>
+  </Folder>
+</Solution>
