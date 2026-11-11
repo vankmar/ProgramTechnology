@@ -9,7 +9,6 @@
 
   <ItemGroup>
     <Folder Include="Game\" />
-    <Folder Include="Settings\" />
   </ItemGroup>
 
 </Project>

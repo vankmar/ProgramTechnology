@@ -4,11 +4,10 @@ public class ConsoleInputOutput : IInputOutput
 {
     public string ReadLine()
     {
-        throw new NotImplementedException();
+        string input = Console.ReadLine();
+        if (input == null) return "";
+        return input;
     }
 
-    public void WriteLine(string message)
-    {
-        throw new NotImplementedException();
-    }
+    public void WriteLine(string message) => Console.WriteLine(message);
 }
