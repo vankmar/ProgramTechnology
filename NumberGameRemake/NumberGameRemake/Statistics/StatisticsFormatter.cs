@@ -8,6 +8,7 @@ public class StatisticsFormatter(IInputOutput io)
 
     public void Show(StatisticsKeeper stats)
     {
+        _io.WriteLine($"Статистика для игрока {stats.Player}:");
         _io.WriteLine($"Игр сыграно: {stats.GameCount} | Побед: {stats.GamesWon}");
         _io.WriteLine($"Мин. попыток: {stats.Min} | Макс. попыток: {stats.Max}");
         _io.WriteLine($"Среднее кол-во попыток: {stats.AverageAttempts}");

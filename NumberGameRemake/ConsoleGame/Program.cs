@@ -10,18 +10,21 @@ namespace ConsoleGame
     {
         static void Main(string[] args)
         {
-            string filePath = "statistics.txt";
-            
             IInputOutput io = new ConsoleInputOutput();
             INumberGenerator generator = new RandomNumberGenerator();
-            IStatistics storage = new StatisticsFileStorage(filePath);
+            IStatistics storage = new StatisticsFileStorage();
 
             DifficultySelector selector = new DifficultySelector(io); // базовая / кастомная
             GuessReader reader = new GuessReader(io);
             StatisticsFormatter formatter = new StatisticsFormatter(io); 
             GameEngine engine = new GameEngine(generator);
-            StatisticsKeeper currentStats = storage.Load();
-            
+
+            io.WriteLine("Введите ваше имя:");
+            string player = io.ReadLine().Trim();
+            if (string.IsNullOrEmpty(player)) 
+                player = "DefaultPlayer";
+
+            StatisticsKeeper currentStats = storage.Load(player);
 
             engine.OnNotification += (s, e) => io.WriteLine($"[ИГРА]: {e.Message}");
             engine.OnGameFinished += (sender, e) =>

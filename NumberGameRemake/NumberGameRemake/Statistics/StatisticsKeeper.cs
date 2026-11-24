@@ -1,7 +1,8 @@
 ﻿namespace NumberGameRemake.Statistics;
 
-public class StatisticsKeeper
+public class StatisticsKeeper(string player)
 {
+    public string Player { get; set; } = player;
     public int Min { get; set; } = 0; //минимальное количество попыток
     public int Max { get; set; } = 0; //максимальное количество попыток
     public int TotalAttemptCount { get; set; } = 0; // общее количество попыток во всех играх

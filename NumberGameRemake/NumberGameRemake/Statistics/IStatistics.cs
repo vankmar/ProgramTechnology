@@ -2,6 +2,6 @@
 
 public interface IStatistics
 {
-    StatisticsKeeper Load();
+    StatisticsKeeper Load(string playerName);
     void Save(StatisticsKeeper stats);
 }

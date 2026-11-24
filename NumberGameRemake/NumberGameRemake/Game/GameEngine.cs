@@ -12,12 +12,12 @@ public class GameEngine(INumberGenerator generator)
     private bool _isGameActive;
 
     public event EventHandler<GameNotificationEventArgs>? OnNotification;
-    public event EventHandler<GameFinishedEventArgs>? OnGameFinished;
+    public event EventHandler<GameFinishedEventArgs>? OnGameFinished;  
 
-    public void StartNewRound(GameSettings settings)
-    {
+    public void StartNewRound(GameSettings settings) 
+    { 
         _currentSettings = settings;
-        _target = _generator.Generate(settings.MinRange, settings.MaxRange);
+        _target = _generator.Generate(settings.MinRange, settings.MaxRange); 
         _attempts = 0;
         _isGameActive = true;
 

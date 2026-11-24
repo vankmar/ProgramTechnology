@@ -2,15 +2,14 @@
 
 public class StatisticsFileStorage : IStatistics
 {
-    private readonly string _filePath;
-    public StatisticsFileStorage(string filePath) { _filePath = filePath; }
-
-    public StatisticsKeeper Load()
+    public StatisticsKeeper Load(string playerName)
     {
-        var stats = new StatisticsKeeper();
-        if (!File.Exists(_filePath)) return stats;
+        var stats = new StatisticsKeeper(playerName);
+        string filePath = $"stats_{playerName}.txt";
 
-        using (StreamReader reader = new StreamReader(_filePath))
+        if (!File.Exists(filePath)) return stats;
+
+        using (StreamReader reader = new StreamReader(filePath))
         {
             if (int.TryParse(reader.ReadLine(), out int min)) stats.Min = min;
             if (int.TryParse(reader.ReadLine(), out int max)) stats.Max = max;
@@ -18,13 +17,12 @@ public class StatisticsFileStorage : IStatistics
             if (int.TryParse(reader.ReadLine(), out int played)) stats.GameCount = played;
             if (int.TryParse(reader.ReadLine(), out int won)) stats.GamesWon = won;
         }
-
         return stats;
     }
 
     public void Save(StatisticsKeeper stats)
     {
-        using (StreamWriter writer = new StreamWriter(_filePath))
+        using (StreamWriter writer = new StreamWriter($"stats_{stats.Player}.txt"))
         {
             writer.WriteLine(stats.Min);
             writer.WriteLine(stats.Max);
