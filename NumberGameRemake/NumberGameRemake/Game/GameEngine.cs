@@ -21,7 +21,7 @@ public class GameEngine(INumberGenerator generator)
         _attempts = 0;
         _isGameActive = true;
 
-        OnNotification?.Invoke(this, new GameNotificationEventArgs($"Игра началась!"));
+        OnNotification?.Invoke(this, new GameNotificationEventArgs($"Игра началась! Количество попыток: {settings.MaxAttempts}"));
     }
 
     public GuessResult MakeGuess(int userNumber)
@@ -34,7 +34,7 @@ public class GameEngine(INumberGenerator generator)
 
         _attempts++;
 
-        if (userNumber == _target)
+        if (userNumber == _target) 
         {
             _isGameActive = false;
             OnNotification?.Invoke(this, new GameNotificationEventArgs($"Победа! Число {_target} угадано за {_attempts} попыток."));

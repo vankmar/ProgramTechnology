@@ -1,3 +1,6 @@
 <Solution>
+  <Project Path="ConsoleGame/ConsoleGame.csproj" Id="38cb0d01-7d6e-4fb6-9a72-dc74b83f2021">
+    <BuildDependency Project="NumberGameRemake/NumberGameRemake.csproj" />
+  </Project>
   <Project Path="NumberGameRemake/NumberGameRemake.csproj" />
 </Solution>
