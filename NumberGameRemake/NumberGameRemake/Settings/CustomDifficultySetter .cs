@@ -20,7 +20,7 @@ public class CustomDifficultySetter : IDifficultySetter
             MaxAttempts = attempts
         };
     }
-    private int Set(string message) // вспомогательный метод
+    private int Set(string message) // вспомогательный метод 
     {
         int parameter;
         _io.WriteLine(message);
