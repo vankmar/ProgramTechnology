@@ -11,8 +11,8 @@ public class GameEngine(INumberGenerator generator)
     private int _attempts;
     private bool _isGameActive;
 
-    public event EventHandler<GameNotificationEventArgs>? OnNotification;
-    public event EventHandler<GameFinishedEventArgs>? OnGameFinished;  
+    public event EventHandler<GameNotificationEventArgs>? Notification;
+    public event EventHandler<GameFinishedEventArgs>? GameFinished;  
 
     public void StartNewRound(GameSettings settings) 
     { 
@@ -21,14 +21,14 @@ public class GameEngine(INumberGenerator generator)
         _attempts = 0;
         _isGameActive = true;
 
-        OnNotification?.Invoke(this, new GameNotificationEventArgs($"Игра началась! Количество попыток: {settings.MaxAttempts}"));
+        OnNotification(new GameNotificationEventArgs($"Игра началась! Количество попыток: {settings.MaxAttempts}"));
     }
 
     public GuessResult MakeGuess(int userNumber)
     {
         if (!_isGameActive)
         {
-            OnNotification?.Invoke(this, new GameNotificationEventArgs("Игра еще не запущена."));
+            OnNotification(new GameNotificationEventArgs("Игра еще не запущена."));
             return GuessResult.GameNotStarted;
         }
 
@@ -37,26 +37,31 @@ public class GameEngine(INumberGenerator generator)
         if (userNumber == _target) 
         {
             _isGameActive = false;
-            OnNotification?.Invoke(this, new GameNotificationEventArgs($"Победа! Число {_target} угадано за {_attempts} попыток."));
-            OnGameFinished?.Invoke(this, new GameFinishedEventArgs(_attempts, true, _target));
+            OnNotification(new GameNotificationEventArgs($"Победа! Число {_target} угадано за {_attempts} попыток."));
+            OnGameFinished(new GameFinishedEventArgs(_attempts, true, _target));
             return GuessResult.Win;
         }
         if (_currentSettings.MaxAttempts > 0 && _attempts >= _currentSettings.MaxAttempts)
         {
             _isGameActive = false;
-            OnNotification?.Invoke(this, new GameNotificationEventArgs($"Вы проиграли! Попытки закончились. Загаданное число: {_target}."));
-            OnGameFinished?.Invoke(this, new GameFinishedEventArgs(_attempts, false, _target));
+            OnNotification(new GameNotificationEventArgs($"Вы проиграли! Попытки закончились. Загаданное число: {_target}."));
+            OnGameFinished(new GameFinishedEventArgs(_attempts, false, _target));
             return GuessResult.LoseOutOfAttempts;
         }
         if (userNumber > _target)
         {
-            OnNotification?.Invoke(this, new GameNotificationEventArgs("Ваше число больше загаданного."));
+            OnNotification(new GameNotificationEventArgs("Ваше число больше загаданного."));
             return GuessResult.TooHigh;
         }
         else
         {
-            OnNotification?.Invoke(this, new GameNotificationEventArgs("Ваше число меньше загаданного."));
+            OnNotification(new GameNotificationEventArgs("Ваше число меньше загаданного."));
             return GuessResult.TooLow;
         }
     }
+
+    protected virtual void OnNotification(GameNotificationEventArgs e)
+        => Notification?.Invoke(this, e);
+    protected virtual void OnGameFinished(GameFinishedEventArgs e)
+        => GameFinished?.Invoke(this, e);
 }

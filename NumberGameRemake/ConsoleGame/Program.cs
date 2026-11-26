@@ -26,12 +26,15 @@ namespace ConsoleGame
 
             StatisticsKeeper currentStats = storage.Load(player);
 
-            engine.OnNotification += (s, e) => io.WriteLine($"[ИГРА]: {e.Message}");
-            engine.OnGameFinished += (sender, e) =>
+            EventHandler<GameNotificationEventArgs> notify = (s, e) => io.WriteLine($"[ИГРА]: {e.Message}");
+            EventHandler<GameFinishedEventArgs> finish = (s, e) =>
             {
                 currentStats.RecordStatistics(e.Attempts, e.IsWin);
                 storage.Save(currentStats);
             };
+            engine.Notification += notify;
+            engine.GameFinished += finish;
+
 
             string playAgain;
             do
@@ -59,6 +62,8 @@ namespace ConsoleGame
                 Console.WriteLine("Сыграть еще раз? (Y/N):");
                 playAgain = Console.ReadLine()?.Trim().ToUpper() ?? "N";
             } while (playAgain == "Y");
+            engine.Notification -= notify;
+            engine.GameFinished -= finish;
         }
     }
 }
